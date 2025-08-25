@@ -1,0 +1,67 @@
+import './WatchdogToast.css';
+import { pingBase64 } from '../assets/sound';
+
+const sound = new Audio(pingBase64);
+sound.volume = 0.03;
+
+export function createCustomToast(
+  username: string,
+  name: string,
+  avatarUrl: string,
+  onClick: () => void,
+  playSound: boolean
+) {
+  const id = `watchdog-toast-${Date.now()}`;
+
+  if (playSound) {
+    try {
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    } catch (_) {}
+  }
+
+  const container =
+    document.getElementById('watchdog-toast-container') ||
+    (() => {
+      const el = document.createElement('div');
+      el.id = 'watchdog-toast-container';
+      el.className = 'watchdog-toast-container';
+      document.body.appendChild(el);
+      return el;
+    })();
+
+  const toast = document.createElement('div');
+  toast.id = id;
+  toast.className = 'watchdog-toast';
+  toast.style.cursor = 'pointer';
+
+  const icon = document.createElement('span');
+  icon.textContent = '🔔';
+  icon.style.marginRight = '8px';
+
+  const avatar = document.createElement('img');
+  avatar.src = avatarUrl;
+  avatar.alt = username;
+  avatar.className = 'watchdog-avatar';
+
+  const text = document.createElement('span');
+  text.textContent = `${username} mentioned "${name}"`;
+  text.className = 'watchdog-text';
+
+  toast.appendChild(icon);
+  toast.appendChild(avatar);
+  toast.appendChild(text);
+
+  toast.onclick = () => {
+    onClick?.();
+    toast.remove();
+    if (container.childElementCount === 0) container.remove();
+  };
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+    if (container.childElementCount === 0) container.remove();
+  }, 6000);
+}
