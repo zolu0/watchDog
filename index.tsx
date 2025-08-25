@@ -43,7 +43,6 @@ export default definePlugin({
 
   patches: [
     {
-      // Target the Help (?) icon in the header (SVG path "M9 3v18")
       find: '"M9 3v18"',
       replacement: {
         match: /focusSectionProps:"HELP".{0,20},className:(\i\.button)\}\),/,
