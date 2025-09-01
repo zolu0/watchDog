@@ -12,7 +12,7 @@
 .watchdog-toast {
     display: flex;
     align-items: center;
-    background: var(--background-floating);
+    background: rgba(32, 34, 37, 0.95);
     color: var(--header-primary);
     padding: 14px 18px;
     border-radius: 12px;
