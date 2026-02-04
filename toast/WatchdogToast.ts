@@ -9,19 +9,20 @@ import "./WatchdogToast.css";
 import { pingBase64 } from "../assets/sound";
 
 const sound = new Audio(pingBase64);
-sound.volume = 0.1;
 
 export function createCustomToast(
     username: string,
     name: string,
     avatarUrl: string,
     onClick: () => void,
-    playSound: boolean
+    playSound: boolean,
+    volume: number
 ) {
     const id = `watchdog-toast-${Date.now()}`;
 
     if (playSound) {
         try {
+            sound.volume = volume;
             sound.currentTime = 0;
             sound.play().catch(() => { });
         } catch (_) { }
