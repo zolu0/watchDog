@@ -5,13 +5,12 @@
  */
 
 import { definePluginSettings } from "@api/Settings";
-import ErrorBoundary from "@components/ErrorBoundary";
 import definePlugin from "@utils/types";
 import { OptionType } from "@utils/types";
 import { FluxDispatcher, NavigationRouter, UserStore } from "@webpack/common";
 
-import { OpenWatchdogButton } from "./components/OpenWatchdogButton";
 import { addLog } from "./data/logDB";
+import { openWatchdogModal } from "./modals/WatchdogModal";
 import { createCustomToast } from "./toast/WatchdogToast";
 
 function normalizeNames(input: string): string[] {
@@ -41,34 +40,10 @@ export default definePlugin({
         },
     }),
 
-    patches: [
-        // Patch #1 — Channel headers (servers, DMs)
-        {
-            find: ".controlButtonWrapper,",
-            replacement: {
-                match: /(function \i\(\i\){)(.{1,200}toolbar.{1,100}mobileToolbar)/,
-                replace: "$1$self.addIconToToolBar(arguments[0]);$2"
-            }
+    toolboxActions: {
+        "WatchDog Logs"() {
+            openWatchdogModal();
         }
-    ],
-
-
-
-    addIconToToolBar(e: { toolbar: React.ReactNode[] | React.ReactNode; }) {
-        if (Array.isArray(e.toolbar)) {
-            return e.toolbar.unshift(
-                <ErrorBoundary noop={true} key="watchdog-button">
-                    <OpenWatchdogButton />
-                </ErrorBoundary>
-            );
-        }
-
-        e.toolbar = [
-            <ErrorBoundary noop={true} key="watchdog-button">
-                <OpenWatchdogButton />
-            </ErrorBoundary>,
-            e.toolbar,
-        ];
     },
 
     start() {
