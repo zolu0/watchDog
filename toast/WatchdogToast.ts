@@ -6,9 +6,9 @@
 
 import "./WatchdogToast.css";
 
-import { pingBase64 } from "../assets/sound";
+import { PING_URL } from "../assets/sound";
 
-const sound = new Audio(pingBase64);
+const sound = new Audio(PING_URL);
 
 export function createCustomToast(
     username: string,
